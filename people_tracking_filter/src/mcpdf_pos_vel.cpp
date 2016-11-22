@@ -122,7 +122,7 @@ void MCPdfPosVel::getParticleCloud(const tf::Vector3& step, double threshold, se
         weights[t] = rgb[999 - (int)trunc(max(0.0, min(999.0, hist(r, c) * 2 * total * total)))];
         t++;
       }
-  cloud.header.frame_id = "odom_combined";
+  cloud.header.frame_id = "odom";
   cloud.points  = points;
   channel.name = "rgb";
   channel.values = weights;
