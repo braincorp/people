@@ -328,10 +328,10 @@ public:
     connected_thresh_       = config.connection_threshold;
     min_points_per_group    = config.min_points_per_group;
     leg_reliability_limit_  = config.leg_reliability_limit;
-    publish_legs_           = config.publish_legs;
-    publish_people_         = config.publish_people;
-    publish_leg_markers_    = config.publish_leg_markers;
-    publish_people_markers_ = config.publish_people_markers;
+    publish_legs_           = true; config.publish_legs;
+    publish_people_         = true; config.publish_people;
+    publish_leg_markers_    = true; config.publish_leg_markers;
+    publish_people_markers_ = true; config.publish_people_markers;
 
     no_observation_timeout_s = config.no_observation_timeout;
     max_second_leg_age_s     = config.max_second_leg_age;
@@ -891,14 +891,14 @@ public:
         m.header.frame_id = fixed_frame;
         m.ns = "LEGS";
         m.id = i;
-        m.type = m.SPHERE;
+        m.type = m.CUBE;
         m.pose.position.x = (*sf_iter)->position_[0];
         m.pose.position.y = (*sf_iter)->position_[1];
         m.pose.position.z = (*sf_iter)->position_[2];
 
-        m.scale.x = .1;
-        m.scale.y = .1;
-        m.scale.z = .1;
+        m.scale.x = .4;
+        m.scale.y = .4;
+        m.scale.z = .4;
         m.color.a = 1;
         m.lifetime = ros::Duration(0.5);
         if ((*sf_iter)->object_id != "")
@@ -913,6 +913,9 @@ public:
         markers_pub_.publish(m);
       }
 
+      if (legs.size() > 0 || people.size()>0) {
+          //ROS_ERROR("LEGS %d, PEOPLE %d", (int)legs.size(), (int)people.size());
+      }
       if (publish_people_ || publish_people_markers_)
       {
         SavedFeature* other = (*sf_iter)->other;
@@ -958,9 +961,9 @@ public:
             m.pose.position.x = dx;
             m.pose.position.y = dy;
             m.pose.position.z = dz;
-            m.scale.x = .2;
-            m.scale.y = .2;
-            m.scale.z = .2;
+            m.scale.x = .8;
+            m.scale.y = .8;
+            m.scale.z = .8;
             m.color.a = 1;
             m.color.g = 1;
             m.lifetime = ros::Duration(0.5);
@@ -971,7 +974,6 @@ public:
       }
     }
 
-    ROS_ERROR("LEGS %d, PEOPLE %d", (int)legs.size(), (int)people.size());
     people_msgs::PositionMeasurementArray array;
     array.header.stamp = ros::Time::now();
     if (publish_legs_)

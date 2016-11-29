@@ -69,8 +69,8 @@ class PersonEstimate(object):
         return v
 
     def publish_markers(self, pub):
-        gen.scale = [.1, .3, 0]
-        gen.color = [1, 1, 1, 1]
+        gen.scale = [1.5, 0.2, 0.1]
+        gen.color = [1, 0.5, 1, 1]
         vel = self.velocity()
         #scale(vel, 15)
         m = gen.marker(points=[self.pos.pos, add(self.pos.pos, vel)])
@@ -125,6 +125,7 @@ class VelocityTracker(object):
         pl.header.frame_id = None
 
         for p in self.people.values():
+            rospy.logwarn("PUBLISH A MARKER")
             p.publish_markers(self.mpub)
             frame, person = p.get_person()
             pl.header.frame_id = frame
